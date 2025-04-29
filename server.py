@@ -1,33 +1,24 @@
 from flask import Flask
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-import chromedriver_binary  # <-- chromedriver PATH 자동 설정
-import time
+import requests
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
 @app.route('/api/news')
 def crawl_news():
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
+    url = "https://pokemongo.com/news?hl=ko"
+    response = requests.get(url)
+    response.raise_for_status()
 
-    driver = webdriver.Chrome(options=chrome_options)
+    soup = BeautifulSoup(response.text, "html.parser")
+    items = soup.select("div.NewsList-content-block a")
 
-    try:
-        driver.get("https://pokemongo.com/news?hl=ko")
-        time.sleep(2)
+    result = ""
+    for item in items[:5]:  # 상위 5개만
+        title = item.get_text(strip=True)
+        link = item.get('href')
+        if not link.startswith("http"):
+            link = "https://pokemongo.com" + link
+        result += f"<b>{title}</b><br><a href='{link}'>{link}</a><br><br>"
 
-        items = driver.find_elements(By.CSS_SELECTOR, "div.NewsList-content-block a")
-
-        result = ""
-        for item in items[:5]:
-            title = item.text.strip()
-            link = item.get_attribute("href")
-            result += f"<b>{title}</b><br><a href='{link}'>{link}</a><br><br>"
-
-        return result
-    finally:
-        driver.quit()
+    return result
