@@ -11,8 +11,9 @@ def crawl_news():
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    
-    driver = uc.Chrome(options=options, headless=True)
+
+    # ❗ 여기 수정됨
+    driver = uc.Chrome(options=options)
 
     try:
         driver.get("https://pokemongo.com/news?hl=ko")
