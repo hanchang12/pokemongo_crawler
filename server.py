@@ -7,19 +7,24 @@ app = Flask(__name__)
 @app.route('/api/news')
 def crawl_news():
     try:
-        url = "https://pokemongo.com/news?hl=ko"
-        response = requests.get(url, timeout=10)
+        url = "https://pokemongolive.com/news"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36"
+        }
+        response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
 
         soup = BeautifulSoup(response.text, "html.parser")
-        items = soup.select("div.NewsList-content-block a")
+        items = soup.select("section.NewsList__Grid-sc-1cm8g4x-2 article a")
 
         result = ""
+        base_url = "https://pokemongolive.com"
+
         for item in items[:5]:  # 상위 5개 뉴스만 출력
             title = item.get_text(strip=True)
             link = item.get('href')
             if link and not link.startswith("http"):
-                link = "https://pokemongo.com" + link
+                link = base_url + link
             result += f"<b>{title}</b><br><a href='{link}'>{link}</a><br><br>"
 
         if not result:
@@ -29,5 +34,3 @@ def crawl_news():
 
     except Exception as e:
         return f"An error occurred: {e}", 500
-
-# (Flask 애플리케이션 엔트리포인트는 gunicorn이 자동으로 실행해줌)
