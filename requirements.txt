@@ -1,3 +1,4 @@
 flask
 gunicorn
-undetected-chromedriver
+selenium
+chromedriver-binary
