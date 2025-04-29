@@ -7,8 +7,12 @@ app = Flask(__name__)
 
 @app.route('/api/news')
 def crawl_news():
-    # 옵션 생략 (필요시 --headless는 내부적으로 자동 적용됨)
-    driver = uc.Chrome(headless=True)
+    options = uc.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    
+    driver = uc.Chrome(options=options, headless=True)
 
     try:
         driver.get("https://pokemongo.com/news?hl=ko")
