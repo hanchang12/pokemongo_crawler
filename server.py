@@ -1,10 +1,11 @@
 from flask import Flask
+import chromedriver_autoinstaller
+chromedriver_autoinstaller.install()
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
-import chromedriver_autoinstaller
-chromedriver_autoinstaller.install()
 
 app = Flask(__name__)
 
@@ -20,8 +21,8 @@ def crawl_news():
     try:
         driver.get("https://pokemongo.com/news?hl=ko")
         time.sleep(2)
-        items = driver.find_elements(By.CSS_SELECTOR, "div.NewsList-content-block a")
 
+        items = driver.find_elements(By.CSS_SELECTOR, "div.NewsList-content-block a")
         result = ""
         for item in items[:5]:
             title = item.text
