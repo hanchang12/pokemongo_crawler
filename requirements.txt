@@ -1,4 +1,3 @@
 flask
-selenium
 gunicorn
-chromedriver_autoinstaller
+undetected-chromedriver
