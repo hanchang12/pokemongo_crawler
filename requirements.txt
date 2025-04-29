@@ -1,4 +1,4 @@
 flask
 gunicorn
-selenium
-chromedriver-binary
+requests
+beautifulsoup4
