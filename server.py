@@ -1,23 +1,25 @@
 from flask import Flask
-import undetected_chromedriver as uc
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+import chromedriver_binary  # <-- chromedriver PATH 자동 설정
 import time
 
 app = Flask(__name__)
 
 @app.route('/api/news')
 def crawl_news():
-    options = uc.ChromeOptions()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
 
-    # ❗ 여기 수정됨
-    driver = uc.Chrome(options=options)
+    driver = webdriver.Chrome(options=chrome_options)
 
     try:
         driver.get("https://pokemongo.com/news?hl=ko")
         time.sleep(2)
+
         items = driver.find_elements(By.CSS_SELECTOR, "div.NewsList-content-block a")
 
         result = ""
@@ -27,6 +29,5 @@ def crawl_news():
             result += f"<b>{title}</b><br><a href='{link}'>{link}</a><br><br>"
 
         return result
-
     finally:
         driver.quit()
