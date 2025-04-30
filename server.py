@@ -8,7 +8,8 @@ app = Flask(__name__)
 @app.route('/api/news')
 def crawl_and_translate_news():
     try:
-        url = "https://pokemongohub.net/post/category/news/"
+#        url = "https://pokemongohub.net/post/category/news/"
+        url = "https://poketory.com/"
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36"
         }
