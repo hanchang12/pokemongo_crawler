@@ -66,6 +66,3 @@ def render_news():
     </html>
     """
     return render_template_string(html_template, news=news)
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
