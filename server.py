@@ -33,7 +33,11 @@ def upload_news():
 @app.route("/api/news", methods=["GET"])
 def get_news():
     news = list(deduplicated_news.values())
-    return jsonify(news if news else {"message": "아직 데이터 없음"}), 200
+    return app.response_class(
+        response=json.dumps(news if news else {"message": "아직 데이터 없음"}, ensure_ascii=False, indent=2),
+        status=200,
+        mimetype='application/json'
+    )
 
 @app.route("/api/news/<string:date>", methods=["GET"])
 def get_news_by_date(date):
